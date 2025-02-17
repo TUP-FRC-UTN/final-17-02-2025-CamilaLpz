@@ -150,8 +150,32 @@ export class GameComponent implements OnInit{
     return '';
 }
 
-  postGame(){
 
+  postGame(){
+    let name = localStorage.getItem('name') + '';
+    let id = this.generateId();
+    let score = this.win ? 1 : 0;
+    let date = new Date();
+    let idGame = id;
+
+    let newScore : Score = {
+      id : id,
+      playerName : name,
+      word : this.word,
+      attemptsLeft : this.tries,
+      score : score,
+      date : date,
+      idGame : idGame
+    }
+
+    this.api.postScore(newScore).subscribe({
+      next: () => {
+        alert('Puntaje guardado');
+      },
+      error: () => {
+        alert('Error al guardar el puntaje');
+      }
+    });
   }
 }
 

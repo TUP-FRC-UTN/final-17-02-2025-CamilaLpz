@@ -25,4 +25,8 @@ export class ApiService {
   getScoreByPlayerName(name: string): Observable<Score[]>{
     return this.http.get<Score[]>(`https://671fe287e7a5792f052fdf93.mockapi.io/scores?playerName=${name}`);
   }
+
+  postScore(score: Score): Observable<Score>{
+    return this.http.post<Score>('https://671fe287e7a5792f052fdf93.mockapi.io/scores', score);
+  }
 }
