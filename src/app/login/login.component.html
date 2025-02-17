@@ -1,0 +1,25 @@
+<section class="min-vh-100 bg-dark d-flex justify-content-center align-items-center">
+    <div class="container bg-light rounded p-3 w-25">
+        <h4 class="text-center">Iniciar sesión</h4>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="mb-3">
+                <label for="userInput" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="userInput" formControlName="username">
+                <div class="text-danger">{{showErrors('username')}}</div>
+            </div>
+            <div class="mb-3">
+                <label for="passInput" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="passInput" formControlName="password">
+                <div class="text-danger">{{showErrors('password')}}</div>
+            </div>
+            @if(error){
+            <div class="alert alert-danger" role="alert">
+                Usuario o contraseña incorrectos
+            </div>
+            }
+            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+
+        </form>
+
+    </div>
+</section>

@@ -1,0 +1,29 @@
+<div class="container">
+    <h4>Ahorcado</h4>
+    <form [formGroup]="gameForm">
+        <div class="mb-3 w-50">
+            <label for="userInput" class="form-label">Palabra secreta</label>
+            <input type="text" class="form-control" id="userInput" formControlName="word" readonly>
+        </div>
+        @if (tries) {
+        <div class="mb-3 w-50">
+            <label for="userInput" class="form-label">Intentos {{tries}}</label>
+            <input type="text" class="form-control" id="userInput" formControlName="tryLetter">
+        </div>
+        <button type="button" class="btn btn-dark" (click)="play()" [disabled]="win">Adivinar</button>
+        }
+        @else {
+        <div class="alert alert-danger" role="alert">
+            Se ha quedado sin intentos
+        </div>
+        }
+    </form>
+    @if(!onPlay){
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Resultados</h5>
+            <p>Usted ha {{win ? 'Ganado': 'Perdido'}}!</p>
+        </div>
+    </div>
+    }
+</div>
