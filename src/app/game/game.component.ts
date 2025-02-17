@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../services/api.service';
 import { Score, Word } from '../models/models';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
 @Component({
@@ -24,7 +24,7 @@ export class GameComponent implements OnInit{
   constructor(private route: ActivatedRoute,) { 
     this.gameForm = new FormGroup({
       word : new FormControl(''),
-      tryLetter : new FormControl('')
+      tryLetter : new FormControl('', [Validators.maxLength(1)])
     });
   }
 
@@ -86,25 +86,26 @@ export class GameComponent implements OnInit{
 
   checkWin(){
     let w = this.gameForm.get('word')?.value.replace(/\s/g, '');
-    console.log('Incluye ' + w.includes('_'));
+    console.log('CHECK WIN: ', w);
     
     if(!w.includes('_')){
       this.win = true;
-      return true;
+      this.onPlay = false;
     } else {
       this.win = false;
-      return false;
+      this.play();
     }
   }
 
   play(){
-    if(!this.checkWin()){
-      const tryLetter = this.gameForm.get('tryLetter')?.value.toLowerCase();
+
+    const tryLetter = this.gameForm.get('tryLetter')?.value.toLowerCase();
     
     console.log('Palabra: ' + this.word);
     
-    this.tries--;
+    
     this.checkTurns();
+    this.tries--;
 
     let w : string = '';
 
@@ -129,7 +130,28 @@ export class GameComponent implements OnInit{
     }
     
     this.gameForm.get('word')?.setValue(w);
+  }
+
+  showErrors(controlName: string) {
+    let control = this.gameForm.get(controlName)!;
+    if (control.touched || control.dirty) {
+        if (control && control.errors) {
+            const errorKey = Object.keys(control!.errors!)[0];
+            switch (errorKey) {
+                case 'required':
+                    return 'Este campo no puede estar vacío.';
+                case 'maxlength':
+                  return 'Este campo debe tener al menos ' + control.errors![errorKey].requiredLength + ' caracteres.';
+                case 'minlength':
+                  return 'Este campo debe tener al menos ' + control.errors![errorKey].requiredLength + ' caracteres.';
+            }
+        }
     }
+    return '';
+}
+
+  postGame(){
+
   }
 }
 

@@ -1,17 +1,18 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Score } from '../models/models';
 import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-scores',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './scores.component.html',
   styleUrl: './scores.component.css'
 })
 export class ScoresComponent implements OnInit {
   scores: Score[] = [];
   name : string = '';
+  role : string = localStorage.getItem('actualRole') + '';
 
   private api: ApiService = inject(ApiService);
   private router : Router = inject(Router);
@@ -32,23 +33,26 @@ export class ScoresComponent implements OnInit {
   }
 
   loadScores() {
-    this.api.getAllScores().subscribe({
-      next: (scores: Score[]) => {
-        let role = localStorage.getItem('actualRole');
-        let name = this.showName();
-        if(role === 'student'){
-          let name : string = this.showName() + '';
-          
-          this.scores = scores.filter(score => score.playerName === name);
-        }
-        else{
+    if(this.role === 'student'){
+      this.api.getScoreByPlayerName(this.name).subscribe({
+        next: (scores: Score[]) => {
           this.scores = scores;
+        },
+        error: () => {
+          alert('Error al cargar los puntajes');
         }
-      },
-      error: () => { 
-        alert('Error al cargar los puntajes');
-      }
-    });
+      })
+    }
+    else{
+      this.api.getAllScores().subscribe({
+        next: (scores: Score[]) => {
+          this.scores = scores;
+        },
+        error: () => {
+          alert('Error al cargar los puntajes');
+        }
+      });
+    }
   }
 
   logout(){
