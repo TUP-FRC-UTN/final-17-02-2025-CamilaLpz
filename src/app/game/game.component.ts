@@ -91,6 +91,7 @@ export class GameComponent implements OnInit{
     if(!w.includes('_')){
       this.win = true;
       this.onPlay = false;
+      this.postGame();
     } else {
       this.win = false;
       this.play();
