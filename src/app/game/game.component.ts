@@ -149,12 +149,31 @@ export class GameComponent implements OnInit{
     }
     return '';
 }
+  calculateScore(){
+    switch(this.tries){
+      case 6:
+        return 100;
 
+      case 5:
+        return 80;
+      case 4:
+        return 60;
+      case 3:
+        return 40;
+      case 2:
+        return 20;
+      case 1:
+        return 10;
+      case 0:
+        return 0;
+    }
+    return 0;
+  }
 
   postGame(){
     let name = localStorage.getItem('name') + '';
     let id = this.generateId();
-    let score = this.win ? 1 : 0;
+    let score = this.calculateScore();
     let date = new Date();
     let idGame = id;
 
@@ -170,7 +189,7 @@ export class GameComponent implements OnInit{
 
     this.api.postScore(newScore).subscribe({
       next: () => {
-        alert('Puntaje guardado');
+        alert('Juego guardado');
       },
       error: () => {
         alert('Error al guardar el puntaje');
